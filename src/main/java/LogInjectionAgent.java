@@ -1,7 +1,11 @@
+import java.security.ProtectionDomain;
 import net.bytebuddy.agent.builder.AgentBuilder;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
 import java.lang.instrument.Instrumentation;
+import net.bytebuddy.utility.JavaModule;
 
 public class LogInjectionAgent {
     private static LogPointManager logPointManager;
@@ -22,7 +26,7 @@ public class LogInjectionAgent {
         
         new AgentBuilder.Default()
             .type(ElementMatchers.nameMatches(config.getClassPattern()))
-            .transform((builder, typeDescription, classLoader, module) ->
+            .transform((builder, typeDescription, classLoader, module, pd) ->
                 builder.method(ElementMatchers.nameMatches(config.getMethodPattern()))
                     .intercept(MethodDelegation.to(LogInterceptor.class))
             )

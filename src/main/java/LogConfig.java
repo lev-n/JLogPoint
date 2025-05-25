@@ -3,10 +3,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class LogConfig {
-    private String classPattern = ".*"; // Default: all classes
-    private String methodPattern = ".*"; // Default: all methods
+    private String classPattern = ""; // Default: all classes
+    private String methodPattern = ""; // Default: all methods
     private String logLevel = "INFO";
-    private int apiPort = 8080; // HTTP API port
+    private int apiPort = 8081; // HTTP API port
     
     public static LogConfig load(String agentArgs) {
         LogConfig config = new LogConfig();
