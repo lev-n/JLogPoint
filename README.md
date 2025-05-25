@@ -6,6 +6,9 @@ This project provides a simple Java agent that allows adding or removing
 log points at runtime via an HTTP API. It relies on Byte Buddy to
 instrument methods and intercept calls.
 
+This project targets **Java 17**. Ensure JDK 17 or higher is available for
+building and running the agent.
+
 ## Building
 
 Use Maven to build the agent jar:
