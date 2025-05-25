@@ -3,8 +3,11 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class LogConfig {
-    private String classPattern = ""; // Default: all classes
-    private String methodPattern = ""; // Default: all methods
+    // Match all classes and methods by default so that log points added
+    // via the HTTP API are properly instrumented even when no patterns
+    // are supplied through agent arguments.
+    private String classPattern = ".*"; // Default: all classes
+    private String methodPattern = ".*"; // Default: all methods
     private String logLevel = "INFO";
     private int apiPort = 8081; // HTTP API port
     
@@ -29,8 +32,8 @@ public class LogConfig {
         Properties props = new Properties();
         try (FileInputStream fis = new FileInputStream(configPath)) {
             props.load(fis);
-            this.classPattern = props.getProperty("classPattern", this.classPattern);
-            this.methodPattern = props.getProperty("methodPattern", this.methodPattern);
+            this.classPattern = normalizePattern(props.getProperty("classPattern", this.classPattern));
+            this.methodPattern = normalizePattern(props.getProperty("methodPattern", this.methodPattern));
             this.logLevel = props.getProperty("logLevel", this.logLevel);
             this.apiPort = Integer.parseInt(props.getProperty("apiPort", String.valueOf(this.apiPort)));
         } catch (IOException e) {
@@ -45,10 +48,10 @@ public class LogConfig {
             if (kv.length == 2) {
                 switch (kv[0].trim()) {
                     case "classPattern":
-                        this.classPattern = kv[1].trim();
+                        this.classPattern = normalizePattern(kv[1].trim());
                         break;
                     case "methodPattern":
-                        this.methodPattern = kv[1].trim();
+                        this.methodPattern = normalizePattern(kv[1].trim());
                         break;
                     case "logLevel":
                         this.logLevel = kv[1].trim();
@@ -65,4 +68,14 @@ public class LogConfig {
     public String getMethodPattern() { return methodPattern; }
     public String getLogLevel() { return logLevel; }
     public int getApiPort() { return apiPort; }
+
+    /**
+     * Return a regex pattern that matches all when the provided value is blank.
+     */
+    private String normalizePattern(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return ".*";
+        }
+        return value.trim();
+    }
 }

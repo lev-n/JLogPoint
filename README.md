@@ -28,5 +28,6 @@ Start your application with the agent:
 java -javaagent:path/to/jlogpoint.jar=classPattern=com.example.*,methodPattern=get.* -jar yourapp.jar
 ```
 
-Visit `http://localhost:8080/` for the list of HTTP API endpoints that
+The agent instruments all classes and methods by default if no patterns are
+provided. Visit `http://localhost:8081/` for the list of HTTP API endpoints that
 allow managing log points at runtime.
